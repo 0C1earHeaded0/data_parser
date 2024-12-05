@@ -2,6 +2,7 @@ import pandas as pd
 import requests as req
 import psycopg2
 import sqlalchemy
+import os
 
 pages = req.get('https://rickandmortyapi.com/api/character').json()['info']['pages']
 frames = []
@@ -19,7 +20,7 @@ for i in range(1, pages+1):
 df = pd.concat(frames)
 df.to_csv('char.csv', index=False)
 
-engine = sqlalchemy.create_engine('postgresql+psycopg2://postgres:12345@172.19.0.2:5432/postgres')
+engine = sqlalchemy.create_engine(f'postgresql+psycopg2://postgres:{os.getenv("POSTGRES_PASSWORD")}@{os.getenv("POSTGRES_HOST")}:{os.getenv("POSTGRES_PORT")}/postgres')
 
 df = pd.read_csv('char.csv')
 
